@@ -38,7 +38,11 @@ var model = function(){
     }
 
     var getFixture = function getFixture(fixtureid){
-        return db.one('select * from getFixture($1)', fixtureid);
+        return db.one('select * from fixtures where id=$1', fixtureid);
+    }
+
+    var getLeagueTable = function getLeagueTable(competitionid){
+        return db.any('select * from getLeagueTable($1)', competitionid);
     }
 
     return {
@@ -48,7 +52,8 @@ var model = function(){
         getCompetitionFixtures: getCompetitionFixtures,
         getTeam: getTeam,
         getTeamFixtures: getTeamFixtures,
-        getFixture: getFixture
+        getFixture: getFixture,
+        getLeagueTable: getLeagueTable
     }
 };
 

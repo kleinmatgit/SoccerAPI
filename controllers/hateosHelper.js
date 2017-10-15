@@ -6,7 +6,7 @@ var helper = function(){
         element.links.self = apiPath + element.id;
         element.links.teams = apiPath + element.id + '/teams';
         element.links.fixtures = apiPath + element.id + '/fixtures';
-        element.links.table = apiPath + element.id + '/table';
+        element.links.table = apiPath + element.id + '/leaguetable';
         return element;
     }
 
@@ -53,13 +53,30 @@ var helper = function(){
         return linksObj;
     }
 
+    var createLinksInLeagueTable = function createLinksInLeagueTable(req, competitionid) {
+        var apiPath = 'http://' + req.headers.host + '/api';
+        var linksObj = {};
+        linksObj.self = apiPath + '/competitions/' + competitionid + '/leaguetable';
+        linksObj.competition = apiPath + '/competitions/' + competitionid;
+        return linksObj;
+    }
+
+    var injectLinksInLeagueTableRow = function injectLinksInLeagueTableRow(element, req, teamid) {
+        var apiPath = 'http://' + req.headers.host + '/api';
+        element.links = {};
+        element.links.team = apiPath + '/teams/' + teamid;
+        return element;
+    }
+
     return {
         injectLinksInCompetition: injectLinksInCompetition,
         injectLinksInTeam: injectLinksInTeam,
         createLinksInCompetitionTeams: createLinksInCompetitionTeams,
         injectLinksInFixture: injectLinksInFixture,
         createLinksInCompetitionFixtures: createLinksInCompetitionFixtures,
-        createLinksInTeamFixtures: createLinksInTeamFixtures
+        createLinksInTeamFixtures: createLinksInTeamFixtures,
+        createLinksInLeagueTable: createLinksInLeagueTable,
+        injectLinksInLeagueTableRow: injectLinksInLeagueTableRow
     }
 };
 

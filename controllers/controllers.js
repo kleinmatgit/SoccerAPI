@@ -133,6 +133,30 @@ function getFixture(req, res, next) {
         });
 }
 
+function getLeagueTable(req, res, next) {
+    var competitionid = parseInt(req.params.id);
+    model.getLeagueTable(competitionid)
+        .then(function (data) {
+            
+            var returnElements = {};
+            returnElements.links = helper.createLinksInLeagueTable(req, competitionid);
+            
+            var rows = [];
+            data.forEach(function(element, index, array){
+                rows.push(helper.injectLinksInLeagueTableRow(element, req, element.teamid));
+            });
+            
+            returnElements.count = rows.length;
+            returnElements.standing = rows;
+
+            res.status(200)
+            .json(returnElements);
+        })
+        .catch(function (err) {
+            return next(err);
+        });
+}
+
 module.exports = {
   getAllCompetitions: getAllCompetitions,
   getCompetition: getCompetition,
@@ -140,5 +164,6 @@ module.exports = {
   getCompetitionFixtures: getCompetitionFixtures,
   getTeam: getTeam,
   getTeamFixtures: getTeamFixtures,
-  getFixture: getFixture
+  getFixture: getFixture,
+  getLeagueTable: getLeagueTable
 };
