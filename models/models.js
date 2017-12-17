@@ -21,11 +21,17 @@ var model = function(){
         return db.one('select * from getCompetitions where id=$1', competitionid);
     }
 
-    var getCompetitionTeams = function getCompetitionTeams(competitionid){
+    var getCompetitionTeams = function getCompetitionTeams(competitionid, season){
+        if(season){
+            return db.any('select * from getTeamsInCompetitionInSeason($1,$2)', [competitionid, season]);    
+        }
         return db.any('select * from getTeamsInCompetition($1)', competitionid);
     }
     
-    var getCompetitionFixtures = function getCompetitionFixtures(competitionid){
+    var getCompetitionFixtures = function getCompetitionFixtures(competitionid, season){
+        if(season){
+            return db.any('select * from getCompetitionFixturesInSeason($1,$2)', [competitionid, season]);    
+        }
         return db.any('select * from getCompetitionFixtures($1)', competitionid);
     }
 
@@ -33,7 +39,10 @@ var model = function(){
         return db.one('select * from getTeam($1)', teamid);
     }
 
-    var getTeamFixtures = function getTeamFixtures(teamid){
+    var getTeamFixtures = function getTeamFixtures(teamid, season){
+        if(season){
+            return db.any('select * from getTeamFixturesInSeason($1,$2)', [teamid, season]);    
+        }
         return db.any('select * from getTeamFixtures($1)', teamid);
     }
 
@@ -41,7 +50,10 @@ var model = function(){
         return db.one('select * from fixtures where id=$1', fixtureid);
     }
 
-    var getLeagueTable = function getLeagueTable(competitionid){
+    var getLeagueTable = function getLeagueTable(competitionid, season){
+        if(season){
+            return db.any('select * from getLeagueTableInSeason($1,$2)', [competitionid, season]);    
+        }
         return db.any('select * from getLeagueTable($1)', competitionid);
     }
 

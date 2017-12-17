@@ -24,28 +24,31 @@ function getAllCompetitions(req, res, next) {
 
 function getCompetition(req, res, next) {
     var competitionid = parseInt(req.params.id);
+    var season = req.query.season;
     model.getCompetition(competitionid)
         .then(function (data) {
             
             res.status(200)
-            .json(helper.injectLinksInCompetition(data, req));
+            .json(helper.injectLinksInCompetition(data, req, season));
         })
         .catch(function (err) {
             return next(err);
         });
 }
 
+/* example with filter */
 function getCompetitionTeams(req, res, next) {
     var competitionid = parseInt(req.params.id);
-    model.getCompetitionTeams(competitionid)
+    var season = req.query.season;
+    model.getCompetitionTeams(competitionid, season)
         .then(function (data) {
             
             var returnElements = {};
-            returnElements._links = helper.createLinksInCompetitionTeams(req, competitionid);
+            returnElements._links = helper.createLinksInCompetitionTeams(req, competitionid, season);
             
             var teams = [];
             data.forEach(function(element, index, array){
-                teams.push(helper.injectLinksInTeam(element, req));
+                teams.push(helper.injectLinksInTeam(element, req, season));
             });
             
             returnElements.count = teams.length;
@@ -61,15 +64,16 @@ function getCompetitionTeams(req, res, next) {
 
 function getCompetitionFixtures(req, res, next) {
     var competitionid = parseInt(req.params.id);
-    model.getCompetitionFixtures(competitionid)
+    var season = req.query.season;
+    model.getCompetitionFixtures(competitionid, season)
         .then(function (data) {
             
             var returnElements = {};
-            returnElements.links = helper.createLinksInCompetitionFixtures(req, competitionid);
+            returnElements.links = helper.createLinksInCompetitionFixtures(req, competitionid, season);
             
             var fixtures = [];
             data.forEach(function(element, index, array){
-                fixtures.push(helper.injectLinksInFixture(element, req, competitionid, element.hometeamid, element.awayteamid));
+                fixtures.push(helper.injectLinksInFixture(element, req, competitionid, element.hometeamid, element.awayteamid, season));
             });
             
             returnElements.count = fixtures.length;
@@ -98,15 +102,16 @@ function getTeam(req, res, next) {
 
 function getTeamFixtures(req, res, next) {
     var teamid = parseInt(req.params.id);
-    model.getTeamFixtures(teamid)
+    var season = req.query.season;
+    model.getTeamFixtures(teamid, season)
         .then(function (data) {
             
             var returnElements = {};
-            returnElements.links = helper.createLinksInTeamFixtures(req, teamid);
+            returnElements.links = helper.createLinksInTeamFixtures(req, teamid, season);
             
             var fixtures = [];
             data.forEach(function(element, index, array){
-                fixtures.push(helper.injectLinksInFixture(element, req, element.competitionid, element.hometeamid, element.awayteamid));
+                fixtures.push(helper.injectLinksInFixture(element, req, element.competitionid, element.hometeamid, element.awayteamid, season));
             });
             
             returnElements.count = fixtures.length;
@@ -135,11 +140,12 @@ function getFixture(req, res, next) {
 
 function getLeagueTable(req, res, next) {
     var competitionid = parseInt(req.params.id);
-    model.getLeagueTable(competitionid)
+    var season = req.query.season;
+    model.getLeagueTable(competitionid, season)
         .then(function (data) {
             
             var returnElements = {};
-            returnElements.links = helper.createLinksInLeagueTable(req, competitionid);
+            returnElements.links = helper.createLinksInLeagueTable(req, competitionid, season);
             
             var rows = [];
             data.forEach(function(element, index, array){
